@@ -122,8 +122,20 @@ namespace WebAPI2Entidad
                 aes.IV = iv;
                 string aux1 = Convert.ToBase64String(buffer, 0, 16);//gives error when plain text is small
                 string aux2 = Convert.ToBase64String(aes.CreateEncryptor().TransformFinalBlock(buffer,0,buffer.Length));
-
+               
                 return TypedResults.NotFound();
+            }
+
+             static bool StringsAreEqual(string a, string b)
+            {
+                if (string.IsNullOrEmpty(a))
+                {
+                    return string.IsNullOrEmpty(b);
+                }
+                else
+                {
+                    return string.Equals(a, b);
+                }
             }
 
 
