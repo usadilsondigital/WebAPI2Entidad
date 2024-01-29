@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Text;
 using System.Collections.Generic;
 using System.Security.Cryptography;
+using System.Reflection.Emit;
 
 namespace WebAPI2Entidad
 {
@@ -54,8 +55,7 @@ namespace WebAPI2Entidad
             todoItems.MapPost("/", CreateTodo);
             todoItems.MapPut("/{id}", UpdateTodo);
             todoItems.MapDelete("/{id}", DeleteTodo);
-            todoItems.MapGet("/encrypt/{id}/{key}", EncryptAdi);
-            todoItems.MapGet("/encryptAdi/{plainText}/{key}", EncryptAdi);
+            todoItems.MapGet("/enc/{plainText}", EncryptSixFour);
 
             app.Run();
 
@@ -112,26 +112,32 @@ namespace WebAPI2Entidad
             }
             //encrypt
 
-            /*http://localhost:5068/todoitems/encryptAdi/HellowrldThisismyfirstmessage/keynumber1123456*/
-
-            static async Task<IResult> EncryptAdi(string plainText, string key)
+            /* todoitems/enc/HellowrldThisismyfirstmessage  */
+            static async Task<IResult> EncryptSixFour(string plainText)
             {
-                byte[] iv = new byte[16];
-                byte[] buffer = Encoding.UTF8.GetBytes(plainText);
-                AesCryptoServiceProvider aes = new AesCryptoServiceProvider();
-                aes.Key = Encoding.UTF8.GetBytes(key);//give error if the key is not 16 bytes
-                aes.IV = iv;
-                string aux1 = Convert.ToBase64String(buffer, 0, 16);//gives error when plain text is small
-                string aux2 = Convert.ToBase64String(aes.CreateEncryptor().TransformFinalBlock(buffer, 0, buffer.Length));
-                if (string.IsNullOrEmpty(aux2))
+                string encryptedString = string.Empty;
+                encryptedString = Base64Encode(plainText);
+                if (string.IsNullOrEmpty(encryptedString))
                 {
                     return TypedResults.NotFound();
                 }
                 else
                 {
-                    return TypedResults.Ok(aux2);
+                    return TypedResults.Ok(encryptedString);
 
                 }
+            }
+
+            static string Base64Encode(string plainText)
+            {
+                var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(plainText);
+                return System.Convert.ToBase64String(plainTextBytes);
+            }
+
+            static string Base64Decode(string base64EncodedData)
+            {
+                var base64EncodedBytes = System.Convert.FromBase64String(base64EncodedData);
+                return System.Text.Encoding.UTF8.GetString(base64EncodedBytes);
             }
 
             static bool StringsAreEqual(string a, string b)
