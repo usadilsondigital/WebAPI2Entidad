@@ -1,0 +1,17 @@
+@WebAPI2Entidad_HostAddress = http://localhost:5068
+
+GET {{WebAPI2Entidad_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
+
+POST {{WebAPI2Entidad_HostAddress}}/todoitems/
+Content-Type: application/json
+
+{
+  "name":"walk dog",
+  "isComplete":true
+}
+
+
+###
