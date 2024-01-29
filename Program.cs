@@ -114,19 +114,27 @@ namespace WebAPI2Entidad
 
             /*http://localhost:5068/todoitems/encryptAdi/HellowrldThisismyfirstmessage/keynumber1123456*/
 
-            static async Task<IResult> EncryptAdi(string plainText,string key) {
+            static async Task<IResult> EncryptAdi(string plainText, string key)
+            {
                 byte[] iv = new byte[16];
                 byte[] buffer = Encoding.UTF8.GetBytes(plainText);
                 AesCryptoServiceProvider aes = new AesCryptoServiceProvider();
                 aes.Key = Encoding.UTF8.GetBytes(key);//give error if the key is not 16 bytes
                 aes.IV = iv;
                 string aux1 = Convert.ToBase64String(buffer, 0, 16);//gives error when plain text is small
-                string aux2 = Convert.ToBase64String(aes.CreateEncryptor().TransformFinalBlock(buffer,0,buffer.Length));
-               
-                return TypedResults.NotFound();
+                string aux2 = Convert.ToBase64String(aes.CreateEncryptor().TransformFinalBlock(buffer, 0, buffer.Length));
+                if (string.IsNullOrEmpty(aux2))
+                {
+                    return TypedResults.NotFound();
+                }
+                else
+                {
+                    return TypedResults.Ok(aux2);
+
+                }
             }
 
-             static bool StringsAreEqual(string a, string b)
+            static bool StringsAreEqual(string a, string b)
             {
                 if (string.IsNullOrEmpty(a))
                 {
