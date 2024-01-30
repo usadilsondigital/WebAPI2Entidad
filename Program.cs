@@ -57,7 +57,7 @@ namespace WebAPI2Entidad
             todoItems.MapDelete("/{id}", DeleteTodo);
             todoItems.MapGet("/enc/{plainText}", EncryptSixFour);
             todoItems.MapGet("/encwith/{plainText}/{key}", EncriptWithKey);
-            todoItems.MapGet("/decwithkey/{plainText}/{key}", DecryptWithKey);
+            todoItems.MapGet("/decwith/{plainText}/{key}", DecryptWithKey);
 
             app.Run();
 
