@@ -5,6 +5,7 @@ using System.Text;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Reflection.Emit;
+using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI2Entidad
 {
@@ -58,6 +59,8 @@ namespace WebAPI2Entidad
             todoItems.MapGet("/enc/{plainText}", EncryptSixFour);
             todoItems.MapGet("/encwith/{plainText}/{key}", EncriptWithKey);
             todoItems.MapGet("/decwith/{plainText}/{key}", DecryptWithKey);
+            todoItems.MapPost("/decpost", DecryptWithKeyPost);
+
 
             app.Run();
 
@@ -190,6 +193,30 @@ namespace WebAPI2Entidad
                 else
                 {
                     return TypedResults.Ok(Encoding.UTF8.GetString(aes.CreateDecryptor().TransformFinalBlock(buffer, 0, buffer.Length)));
+
+                }
+            }
+
+
+            ///http://localhost:5068/todoitems/decwith
+            static async Task<IResult> DecryptWithKeyPost()
+            {
+
+               string key = "Hello12345Key456";
+                string cypherText = "V7gq/ErnF/IXzXezQyTOi642NQebt15+4KEv0Gk7S5ftl6Eyhktzs3HszxAGEXEC";
+                byte[] iv = new byte[16];
+                byte[] buffer = Convert.FromBase64String(cypherText);
+                AesCryptoServiceProvider aes = new AesCryptoServiceProvider();
+                aes.Key = Encoding.UTF8.GetBytes(key);
+                aes.IV = iv;
+                if (string.IsNullOrEmpty(cypherText) || string.IsNullOrEmpty(key))
+                {
+                    return TypedResults.NotFound();
+                }
+                else
+                {
+                    return TypedResults.Ok(cypherText);
+                   // return TypedResults.Ok(Encoding.UTF8.GetString(aes.CreateDecryptor().TransformFinalBlock(buffer, 0, buffer.Length)));
 
                 }
             }
