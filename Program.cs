@@ -156,26 +156,42 @@ namespace WebAPI2Entidad
 
 
             ///http://localhost:5068/todoitems/encwith/HelloTextHelloTextHelloTextHelloText/Hello12345Key456
-            static string EncriptWithKey(string plainText, string key)
+            static async Task<IResult> EncriptWithKey(string plainText, string key)
             {
                 byte[] iv = new byte[16];
                 byte[] buffer = Encoding.UTF8.GetBytes(plainText);
                 AesCryptoServiceProvider aes = new AesCryptoServiceProvider();
                 aes.Key = Encoding.UTF8.GetBytes(key);
-                aes.IV = iv;
-                return Convert.ToBase64String(aes.CreateEncryptor().TransformFinalBlock(buffer, 0, buffer.Length));
+                aes.IV = iv;                
+                if (string.IsNullOrEmpty(plainText) || string.IsNullOrEmpty(key))
+                {
+                    return TypedResults.NotFound();
+                }
+                else
+                {
+                    return TypedResults.Ok(Convert.ToBase64String(aes.CreateEncryptor().TransformFinalBlock(buffer, 0, buffer.Length)));
+
+                }
             }
 
 
             ///http://localhost:5068/todoitems/decwith/V7gq/ErnF/IXzXezQyTOi642NQebt15+4KEv0Gk7S5ftl6Eyhktzs3HszxAGEXEC/Hello12345Key456
-            static string DecryptWithKey(string cypherText, string key)
+            static async Task<IResult> DecryptWithKey(string cypherText, string key)
             {
                 byte[] iv = new byte[16];
                 byte[] buffer = Convert.FromBase64String(cypherText);
                 AesCryptoServiceProvider aes = new AesCryptoServiceProvider();
                 aes.Key = Encoding.UTF8.GetBytes(key);
-                aes.IV = iv;
-                return Encoding.UTF8.GetString(aes.CreateDecryptor().TransformFinalBlock(buffer, 0, buffer.Length));
+                aes.IV = iv;                
+                if (string.IsNullOrEmpty(plainText) || string.IsNullOrEmpty(key))
+                {
+                    return TypedResults.NotFound();
+                }
+                else
+                {
+                    return TypedResults.Ok(Encoding.UTF8.GetString(aes.CreateDecryptor().TransformFinalBlock(buffer, 0, buffer.Length)));
+
+                }
             }
 
 
