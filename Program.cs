@@ -159,6 +159,7 @@ namespace WebAPI2Entidad
                 AesCryptoServiceProvider aes = new AesCryptoServiceProvider();
                 aes.Key = Encoding.UTF8.GetBytes(key);
                 aes.IV = iv;
+                return Convert.ToBase64String(aes.CreateEncryptor().TransformFinalBlock(buffer, 0, buffer.Length));
             }
 
 
