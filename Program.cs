@@ -56,6 +56,8 @@ namespace WebAPI2Entidad
             todoItems.MapPut("/{id}", UpdateTodo);
             todoItems.MapDelete("/{id}", DeleteTodo);
             todoItems.MapGet("/enc/{plainText}", EncryptSixFour);
+            todoItems.MapGet("/encwith/{plainText}/{key}", EncriptWithKey);
+            todoItems.MapGet("/decwithkey/{plainText}/{key}", DecryptWithKey);
 
             app.Run();
 
@@ -152,6 +154,8 @@ namespace WebAPI2Entidad
                 }
             }
 
+
+            ///http://localhost:5068/todoitems/encwith/HelloTextHelloTextHelloTextHelloText/Hello12345Key456
             static string EncriptWithKey(string plainText, string key)
             {
                 byte[] iv = new byte[16];
@@ -162,6 +166,8 @@ namespace WebAPI2Entidad
                 return Convert.ToBase64String(aes.CreateEncryptor().TransformFinalBlock(buffer, 0, buffer.Length));
             }
 
+
+            ///http://localhost:5068/todoitems/decwith/V7gq/ErnF/IXzXezQyTOi642NQebt15+4KEv0Gk7S5ftl6Eyhktzs3HszxAGEXEC/Hello12345Key456
             static string DecryptWithKey(string cypherText, string key)
             {
                 byte[] iv = new byte[16];
