@@ -183,7 +183,7 @@ namespace WebAPI2Entidad
                 AesCryptoServiceProvider aes = new AesCryptoServiceProvider();
                 aes.Key = Encoding.UTF8.GetBytes(key);
                 aes.IV = iv;                
-                if (string.IsNullOrEmpty(plainText) || string.IsNullOrEmpty(key))
+                if (string.IsNullOrEmpty(cypherText) || string.IsNullOrEmpty(key))
                 {
                     return TypedResults.NotFound();
                 }
