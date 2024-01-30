@@ -156,6 +156,9 @@ namespace WebAPI2Entidad
             {
                 byte[] iv = new byte[16];
                 byte[] buffer = Encoding.UTF8.GetBytes(plainText);
+                AesCryptoServiceProvider aes = new AesCryptoServiceProvider();
+                aes.Key = Encoding.UTF8.GetBytes(key);
+                aes.IV = iv;
             }
 
 
