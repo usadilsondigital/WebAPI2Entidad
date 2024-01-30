@@ -162,6 +162,16 @@ namespace WebAPI2Entidad
                 return Convert.ToBase64String(aes.CreateEncryptor().TransformFinalBlock(buffer, 0, buffer.Length));
             }
 
+            static string DecryptWithKey(string cypherText, string key)
+            {
+                byte[] iv = new byte[16];
+                byte[] buffer = Convert.FromBase64String(cypherText);
+                AesCryptoServiceProvider aes = new AesCryptoServiceProvider();
+                aes.Key = Encoding.UTF8.GetBytes(key);
+                aes.IV = iv;
+                return Encoding.UTF8.GetString(aes.CreateDecryptor().TransformFinalBlock(buffer, 0, buffer.Length));
+            }
+
 
         }
 
