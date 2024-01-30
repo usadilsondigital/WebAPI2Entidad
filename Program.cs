@@ -152,6 +152,11 @@ namespace WebAPI2Entidad
                 }
             }
 
+            static string EncriptWithKey(string plainText, string key)
+            {
+                byte[] iv = new byte[16];
+                byte[] buffer = Encoding.UTF8.GetBytes(plainText);
+            }
 
 
         }
